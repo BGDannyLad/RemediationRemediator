@@ -42,12 +42,19 @@ running = False
 # ---------------- FUNCTIONS ----------------
 
 def show_info():
-    """Displays a custom information popup."""
+    """Displays a custom information popup with copyable text."""
     info_window = tk.Toplevel(root)
-    info_window.title("Random bs")
-    info_window.geometry("350x550")
+    info_window.title("Info & Instructions")
+    info_window.geometry("340x480")
     info_window.configure(bg="#1e1e1e")
     info_window.transient(root)
+    
+    # Text widget instead of Label to allow highlighting/copying
+    # cursor="arrow" makes it feel less like a text editor
+    txt_area = tk.Text(info_window, bg="#1e1e1e", fg="white", 
+                       font=("Arial", 10), padx=20, pady=20, 
+                       wrap="word", bd=0, highlightthickness=0,
+                       cursor="arrow")
     
     info_text = (
         "THE REMEDIATOR\n"
@@ -62,11 +69,15 @@ def show_info():
         "If you're on mac and it is not clicking, go to:\n"
         "Settings -> System and Security -> Accessibility -> add this app\n"
         "If there are any problems or you want new features contact me\n"
-        "If you dont know how to then too bad"
+        "If you dont know how to then too bad\n"
+        "Link to Repo: https://github.com/BGDannyLad/RemediationRemediator.git"
     )
+    txt_area.insert("1.0", info_text)
     
-    tk.Label(info_window, text=info_text, bg="#1e1e1e", fg="white", 
-             font=("Arial", 10), justify="left", wraplength=280, pady=20, padx=20).pack()
+    # Set to 'disabled' so the user can't delete or change the text, 
+    # but they CAN still highlight and copy it.
+    txt_area.config(state="disabled")
+    txt_area.pack(expand=True, fill="both")
     
     tk.Button(info_window, text="Got it", command=info_window.destroy, highlightbackground="#1e1e1e").pack(pady=10)
 
