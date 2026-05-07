@@ -1,0 +1,7 @@
+pyautogui
+pynput
+pyobjc<10
+tk
+pyobjc-core
+pyobjc-framework-Quartz
+pygetwindow

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>The Remediator</string>
+    <key>CFBundleDisplayName</key>
+    <string>The Remediator</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.remediator.autoclicker</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>This app needs to focus target windows to facilitate clicking.</string>
+    <key>NSAccessibilityUsageDescription</key>
+    <string>This app needs accessibility access to monitor the ESC key and simulate clicks.</string>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+</dict>
+</plist>

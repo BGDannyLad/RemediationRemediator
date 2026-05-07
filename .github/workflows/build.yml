@@ -1,0 +1,65 @@
+name: Build Cross-Platform
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller pyautogui pynput pygetwindow
+      - name: Build EXE
+        run: |
+          pyinstaller --onefile --windowed --name "Remediator-Win" "not a virus.py"
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Remediator-Windows
+          path: dist/Remediator-Win.exe
+
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pyinstaller
+      - name: Build app
+        run: |
+          pyinstaller --windowed \
+          --noconfirm \
+          --name "The Remediator" \
+          --osx-bundle-identifier "com.remediator.autoclicker" \
+          "not a virus.py"
+      - name: Inject Privacy Descriptions
+        run: |
+          PLIST="dist/The Remediator.app/Contents/Info.plist"
+          plutil -insert NSAccessibilityUsageDescription -string "This app needs accessibility access to perform clicks and monitor the stop key." "$PLIST"
+          plutil -insert NSAppleEventsUsageDescription -string "This app needs to focus target windows to click them." "$PLIST"
+      - name: Ad-hoc Codesign
+        run: |
+          codesign --force --deep --sign - "dist/The Remediator.app"
+      - name: Zip app
+        run: |
+          cd dist
+          zip -r "Remediator-mac.zip" "The Remediator.app"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Remediator-mac
+          path: dist/Remediator-mac.zip
