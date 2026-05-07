@@ -4,4 +4,4 @@ pyobjc<10
 tk
 pyobjc-core
 pyobjc-framework-Quartz
-pygetwindow
+pyobjc-framework-AppKit

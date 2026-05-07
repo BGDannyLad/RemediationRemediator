@@ -19,13 +19,6 @@ if platform.system() == "Darwin":
     except ImportError:
         pass
 
-# Windows specific imports
-if platform.system() == "Windows":
-    try:
-        import pygetwindow as gw
-    except ImportError:
-        gw = None
-
 # ---------------- CONFIG & DATA ----------------
 
 HARDCODED_MESSAGES = [
@@ -56,10 +49,8 @@ def get_running_apps():
                     if app.activationPolicy() == NSApplicationActivationPolicyRegular]
         return sorted(list(set(gui_apps)))
     elif system == "Windows":
-        if gw:
-            titles = [w.title for w in gw.getAllWindows() if w.title.strip()]
-            return sorted(list(set(titles)))
-        return ["pygetwindow not installed"]
+        # Returns unsupported to avoid needing external windows packages
+        return ["Not supported for Windows"]
     return ["Unsupported OS"]
 
 def refresh_app_list():
@@ -70,16 +61,14 @@ def refresh_app_list():
             app_dropdown.set(current_apps[0])
 
 def focus_target_app(app_name):
+    """Only performs focus switching on macOS. Does nothing on Windows."""
     system = platform.system()
     if not app_name: return
+    
     try:
         if system == "Darwin":
             script = f'tell application "{app_name}" to activate'
             subprocess.run(["osascript", "-e", script])
-        elif system == "Windows" and gw:
-            win = gw.getWindowsWithTitle(app_name)
-            if win:
-                win[0].activate()
     except Exception as e:
         print(f"Focus error: {e}")
 
@@ -127,8 +116,11 @@ def auto_click(interval, limit_val, limit_type, app_name, immediate):
     global running
     start_time = time.time()
     clicks_count = 0
+    
+    # Only fire focus on Mac
     focus_target_app(app_name)
-    time.sleep(0.5) 
+    if platform.system() == "Darwin":
+        time.sleep(0.4) 
 
     if immediate and running and click_position:
         pyautogui.click(click_position[0], click_position[1])

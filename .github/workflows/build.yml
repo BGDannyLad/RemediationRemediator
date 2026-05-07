@@ -16,15 +16,10 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: |
-          pip install pyinstaller pyautogui pynput pygetwindow
+          pip install pyinstaller pyautogui pynput
       - name: Build EXE
         run: |
           pyinstaller --onefile --windowed --name "Remediator-Win" "not a virus.py"
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Remediator-Windows
-          path: dist/Remediator-Win.exe
 
   build-mac:
     runs-on: macos-latest
