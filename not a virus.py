@@ -23,7 +23,7 @@ if platform.system() == "Darwin":
 
 HARDCODED_MESSAGES = [
     "I bet those professors feel dumb now",
-    "Remediate my ass, professor",
+    "Remediate my behind, professor",
     "Even wonder if you've been to your grave?",
     "This is not stealing your credit card information, trust me.",
     "Have fun storming the castle",
@@ -41,6 +41,35 @@ running = False
 
 # ---------------- FUNCTIONS ----------------
 
+def show_info():
+    """Displays a custom information popup."""
+    info_window = tk.Toplevel(root)
+    info_window.title("Random bs")
+    info_window.geometry("350x550")
+    info_window.configure(bg="#1e1e1e")
+    info_window.transient(root)
+    
+    info_text = (
+        "THE REMEDIATOR\n"
+        "------------------\n\n"
+        "1. Click 'Pick Your Location' and then click the target on your screen.\n\n"
+        "2. (macOS Only) Select the app you want to focus from the dropdown.\n\n"
+        "3. Set your interval (seconds between clicks).\n\n"
+        "4. Set a stop limit (optional) or leave at 0 for infinite.\n\n"
+        "5. Press START. \n\n"
+        "Press the 'ESC' key on your keyboard to stop immediately.\n\n"
+        "------------------\n"
+        "If you're on mac and it is not clicking, go to:\n"
+        "Settings -> System and Security -> Accessibility -> add this app\n"
+        "If there are any problems or you want new features contact me\n"
+        "If you dont know how to then too bad"
+    )
+    
+    tk.Label(info_window, text=info_text, bg="#1e1e1e", fg="white", 
+             font=("Arial", 10), justify="left", wraplength=280, pady=20, padx=20).pack()
+    
+    tk.Button(info_window, text="Got it", command=info_window.destroy, highlightbackground="#1e1e1e").pack(pady=10)
+
 def get_running_apps():
     system = platform.system()
     if system == "Darwin":
@@ -49,7 +78,6 @@ def get_running_apps():
                     if app.activationPolicy() == NSApplicationActivationPolicyRegular]
         return sorted(list(set(gui_apps)))
     elif system == "Windows":
-        # Returns unsupported to avoid needing external windows packages
         return ["Not supported for Windows"]
     return ["Unsupported OS"]
 
@@ -61,10 +89,8 @@ def refresh_app_list():
             app_dropdown.set(current_apps[0])
 
 def focus_target_app(app_name):
-    """Only performs focus switching on macOS. Does nothing on Windows."""
     system = platform.system()
     if not app_name: return
-    
     try:
         if system == "Darwin":
             script = f'tell application "{app_name}" to activate'
@@ -117,7 +143,6 @@ def auto_click(interval, limit_val, limit_type, app_name, immediate):
     start_time = time.time()
     clicks_count = 0
     
-    # Only fire focus on Mac
     focus_target_app(app_name)
     if platform.system() == "Darwin":
         time.sleep(0.4) 
@@ -187,7 +212,7 @@ if platform.system() == "Darwin":
     except: pass
     
 root.title("The Remediator")
-root.geometry("380x700")
+root.geometry("380x650")
 main_bg = "#1e1e1e"
 text_color = "white"
 root.configure(bg=main_bg)
@@ -241,7 +266,15 @@ cb_immediate.pack(pady=10)
 btn = tk.Button(root, text="Start", command=start_stop, width=15, height=2, highlightbackground=main_bg)
 btn.pack(pady=10)
 
-footer = tk.Label(root, text="Press 'ESC' to stop", bg=main_bg, fg="#555555", font=("Arial", 9))
-footer.pack(side="bottom", pady=15)
+# Bottom Row for Info and Stop Notice
+bottom_frame = tk.Frame(root, bg=main_bg)
+bottom_frame.pack(side="bottom", fill="x", pady=10)
+
+btn_info = tk.Button(bottom_frame, text="Info", command=show_info, font=("Arial", 9), 
+                     highlightbackground=main_bg)
+btn_info.pack(side="left", padx=15)
+
+footer = tk.Label(bottom_frame, text="Press 'ESC' to stop", bg=main_bg, fg="#555555", font=("Arial", 9))
+footer.pack(side="right", padx=15)
 
 root.mainloop()
