@@ -33,7 +33,8 @@ HARDCODED_MESSAGES = [
     "This app has collected your ssn, shh",
     "technology, boom.",
     "prfsr pwnr",
-    "If there are problems with this then its not my fault"
+    "If there are problems with this then its not my fault",
+    "Frater Memento Mori"
 ]
 
 click_position = None
