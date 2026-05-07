@@ -4,4 +4,3 @@ pyobjc<10
 tk
 pyobjc-core
 pyobjc-framework-Quartz
-pyobjc-framework-AppKit
