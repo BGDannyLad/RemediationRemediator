@@ -154,6 +154,7 @@ def auto_click(interval, limit_val, limit_type, app_name, immediate):
     start_time = time.time()
     clicks_count = 0
     
+    # Initial focus and a slight buffer for the first launch
     focus_target_app(app_name)
     if platform.system() == "Darwin":
         time.sleep(0.4) 
@@ -163,6 +164,10 @@ def auto_click(interval, limit_val, limit_type, app_name, immediate):
         clicks_count += 1
 
     while running:
+        # FORCE FOCUS: This pulls the target app to the front every cycle
+        if app_name and app_name != "Not supported for Windows":
+            focus_target_app(app_name)
+
         if limit_val > 0:
             if limit_type == "Seconds" and (time.time() - start_time) >= limit_val:
                 running = False
@@ -186,10 +191,14 @@ def auto_click(interval, limit_val, limit_type, app_name, immediate):
             if interval < 0.05:
                 time.sleep(interval)
             else:
+                # This sub-loop allows the ESC key to break the sleep delay 
+                # so the app stops immediately rather than waiting for the timer
                 stop_time = time.time() + interval
                 while time.time() < stop_time and running:
                     time.sleep(0.01)
-        if not running: break
+        
+        if not running: 
+            break
 
 def start_stop():
     global running
